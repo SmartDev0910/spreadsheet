@@ -3,18 +3,18 @@
 Full Article with implementation:
 > [Node.js PostgreSQL CRUD example with Express Rest APIs](https://www.bezkoder.com/node-express-sequelize-postgresql/)
 
-We will build Rest Apis that can create, retrieve, update, delete and find Tutorials by title.
+We will build Rest Apis that can create, retrieve, update, delete and find SpreadSheets by title.
 
 The following table shows overview of the Rest APIs that will be exported:
 
-- GET     `api/tutorials`	            get all Tutorials
-- GET     `api/tutorials/:id`         get Tutorial by id
-- POST    `api/tutorials`             add new Tutorial
-- PUT     `api/tutorials/:id`         update Tutorial by id
-- DELETE  `api/tutorials/:id`         remove Tutorial by id
-- DELETE  `api/tutorials`             remove all Tutorials
-- GET     `api/tutorials/published`   find all published Tutorials
-- GET     `api/tutorials?title=[kw]`  find all Tutorials which title contains 'kw'
+- GET     `api/spreadsheets`	            get all SpreadSheets
+- GET     `api/spreadsheets/:id`         get SpreadSheet by id
+- POST    `api/spreadsheets`             add new SpreadSheet
+- PUT     `api/spreadsheets/:id`         update SpreadSheet by id
+- DELETE  `api/spreadsheets/:id`         remove SpreadSheet by id
+- DELETE  `api/spreadsheets`             remove all SpreadSheets
+- GET     `api/spreadsheets/published`   find all published SpreadSheets
+- GET     `api/spreadsheets?title=[kw]`  find all SpreadSheets which title contains 'kw'
 
 ## Demo Video
 This is our Node.js PostgreSQL CRUD example using Express & Sequelize application demo, test Rest Apis with Postman.
@@ -26,12 +26,12 @@ Run our Node.js application with command: `node server.js`.
 
 Using Postman, we're gonna test all the Apis above.
 
-- Create a new Tutorial using `POST /tutorials` Api
+- Create a new SpreadSheet using `POST /spreadsheets` Api
 
 ![node-js-postgresql-crud-example-create](https://dev-to-uploads.s3.amazonaws.com/i/hqvz8ra9p21z927iwzph.png)
 
-After creating some new Tutorials, you can check PostgreSQL table:
-```testdb=# select * from tutorials;
+After creating some new SpreadSheets, you can check PostgreSQL table:
+```testdb=# select * from spreadsheets;
  id |    title    |    description    | published |         createdAt          |         updatedAt
 ----+-------------+-------------------+-----------+----------------------------+----------------------------
   1 | Node Tut #1 | Tut#1 Description | f         | 2020-01-29 10:42:57.121+07 | 2020-01-29 10:42:57.121+07
@@ -41,20 +41,20 @@ After creating some new Tutorials, you can check PostgreSQL table:
   5 | Js Tut #5   | Tut#5 Desc        | f         | 2020-01-29 10:45:44.289+07 | 2020-01-29 10:45:44.289+07
 ```
 
-- Retrieve all Tutorials using `GET /tutorials` Api
+- Retrieve all SpreadSheets using `GET /spreadsheets` Api
 
 ![node-js-postgresql-crud-example-retrieve-all](https://dev-to-uploads.s3.amazonaws.com/i/m9razjm1njgww58er3as.png)
 
-- Retrieve a single Tutorial by id using `GET /tutorials/:id` Api
+- Retrieve a single SpreadSheet by id using `GET /spreadsheets/:id` Api
 
 ![node-js-postgresql-crud-example-retrieve-one](https://dev-to-uploads.s3.amazonaws.com/i/0kuojvc596i5u423od2b.png)
 
-- Update a Tutorial using `PUT /tutorials/:id` Api
+- Update a SpreadSheet using `PUT /spreadsheets/:id` Api
 
 ![node-js-postgresql-crud-example-update](https://dev-to-uploads.s3.amazonaws.com/i/3buqfz0by0lu2z4kf3uq.png)
 
-Check `tutorials` table after some rows were updated:
-```testdb=# select * from tutorials;
+Check `spreadsheets` table after some rows were updated:
+```testdb=# select * from spreadsheets;
  id |     title      |    description    | published |         createdAt          |         updatedAt
 ----+----------------+-------------------+-----------+----------------------------+----------------------------
   1 | Node Tut #1    | Tut#1 Description | f         | 2020-01-29 10:42:57.121+07 | 2020-01-29 10:42:57.121+07
@@ -64,20 +64,20 @@ Check `tutorials` table after some rows were updated:
   5 | Js Tut #5      | Tut#5 Desc        | t         | 2020-01-29 10:45:44.289+07 | 2020-01-29 10:54:20.544+07
 ```
 
-- Find all Tutorials which title contains 'js': `GET /tutorials?title=js`
+- Find all SpreadSheets which title contains 'js': `GET /spreadsheets?title=js`
 
 ![node-js-postgresql-crud-example-search](https://dev-to-uploads.s3.amazonaws.com/i/u2hbmz5r35o7uo09y3z5.png)
 
-- Find all published Tutorials using `GET /tutorials/published` Api
+- Find all published SpreadSheets using `GET /spreadsheets/published` Api
 
 ![node-js-postgresql-crud-example-search-status](https://dev-to-uploads.s3.amazonaws.com/i/dbo753wfqibt0b93d82d.png)
 
-- Delete a Tutorial using `DELETE /tutorials/:id` Api
+- Delete a SpreadSheet using `DELETE /spreadsheets/:id` Api
 
 ![node-js-postgresql-crud-example-delete-one](https://dev-to-uploads.s3.amazonaws.com/i/pyos3wq4tchb8ixuyj1c.png)
 
-Tutorial with id=4 was removed from `tutorials` table:
-```testdb=# select * from tutorials;
+SpreadSheet with id=4 was removed from `spreadsheets` table:
+```testdb=# select * from spreadsheets;
  id |     title      |    description    | published |         createdAt          |         updatedAt
 ----+----------------+-------------------+-----------+----------------------------+----------------------------
   1 | Node Tut #1    | Tut#1 Description | f         | 2020-01-29 10:42:57.121+07 | 2020-01-29 10:42:57.121+07
@@ -86,12 +86,12 @@ Tutorial with id=4 was removed from `tutorials` table:
   5 | Js Tut #5      | Tut#5 Desc        | t         | 2020-01-29 10:45:44.289+07 | 2020-01-29 10:54:20.544+07
 ```
 
-- Delete all Tutorials using `DELETE /tutorials` Api
+- Delete all SpreadSheets using `DELETE /spreadsheets` Api
 
 ![node-js-postgresql-crud-example-delete-all](https://dev-to-uploads.s3.amazonaws.com/i/ga42747jorssl20ywyug.png)
 
-Now there are no rows in `tutorials` table:
-```testdb=# select * from tutorials;
+Now there are no rows in `spreadsheets` table:
+```testdb=# select * from spreadsheets;
  id | title | description | published | createdAt | updatedAt
 ----+-------+-------------+-----------+-----------+-----------
 ```
