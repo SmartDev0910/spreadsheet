@@ -15,10 +15,28 @@ exports.create = (req, res) => {
   // Create a SpreadSheet
   const spreadsheet = {
     employee: req.body.employee,
-    rate: req.body.rate,
-    hrs: req.body.hrs,
-    tips: req.body.tips,
-    s_date: req.body.s_date,
+    monday_rate: req.body.monday_rate,
+    monday_hrs: req.body.monday_hrs,
+    monday_tips: req.body.monday_tips,
+    tuesday_rate: req.body.tuesday_rate,
+    tuesday_hrs: req.body.tuesday_hrs,
+    tuesday_tips: req.body.tuesday_tips,
+    wednesday_rate: req.body.wednesday_rate,
+    wednesday_hrs: req.body.wednesday_hrs,
+    wednesday_tips: req.body.wednesday_tips,
+    thursday_rate: req.body.thursday_rate,
+    thursday_hrs: req.body.thursday_hrs,
+    thursday_tips: req.body.thursday_tips,
+    friday_rate: req.body.friday_rate,
+    friday_hrs: req.body.friday_hrs,
+    friday_tips: req.body.friday_tips,
+    saturday_rate: req.body.saturday_rate,
+    saturday_hrs: req.body.saturday_hrs,
+    saturday_tips: req.body.saturday_tips,
+    sunday_rate: req.body.sunday_rate,
+    sunday_hrs: req.body.sunday_hrs,
+    sunday_tips: req.body.sunday_tips,
+    nth_week: req.body.nth_week,
   };
 
   // Save SpreadSheet in the database
@@ -36,8 +54,8 @@ exports.create = (req, res) => {
 
 // Retrieve all SpreadSheets from the database.
 exports.findAll = (req, res) => {
-  const s_date = req.query.s_date;
-  var condition = s_date ? { s_date: { [Op.iLike]: `%${s_date}%` } } : null;
+  const nth_week = req.query.nth_week;
+  var condition = nth_week ? { nth_week: { [Op.iLike]: `%${nth_week}%` } } : null;
 
   SpreadSheet.findAll({ where: condition })
     .then(data => {
@@ -68,10 +86,10 @@ exports.findOne = (req, res) => {
 
 // Update a SpreadSheet by the id in the request
 exports.update = (req, res) => {
-  const s_date = req.params.s_date;
-
+  const id = req.params.id;
+  console.log(id, req.body)
   SpreadSheet.update(req.body, {
-    where: { s_date: s_date }
+    where: { id: id }
   })
     .then(num => {
       if (num == 1) {
@@ -80,13 +98,13 @@ exports.update = (req, res) => {
         });
       } else {
         res.send({
-          message: `Cannot update SpreadSheet with Date=${s_date}. Maybe SpreadSheet was not found or req.body is empty!`
+          message: `Cannot update SpreadSheet with Date=${id}. Maybe SpreadSheet was not found or req.body is empty!`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error updating SpreadSheet with Date=" + s_date
+        message: "Error updating SpreadSheet with Date=" + id
       });
     });
 };

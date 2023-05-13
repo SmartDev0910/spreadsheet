@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import axios from 'axios';
 import { CSVLink } from "react-csv"
 import { Table, DatePicker, Row, Col, Button, Modal, Input, InputNumber, Typography, Form, Popconfirm } from 'antd';
 import { DownloadOutlined, AppstoreAddOutlined, UserOutlined } from '@ant-design/icons';
@@ -17,6 +18,7 @@ const SpreadTable = () => {
     const [sunday, setSunday] = useState('2023-05-13');
     const [data, setData] = useState([]);
     const [editingKey, setEditingKey] = useState('');
+    const [nth_week, setNthWeek] = useState('');
     const isEditing = (record) => record.key === editingKey;
 
     const EditableCell = ({
@@ -348,40 +350,6 @@ const SpreadTable = () => {
         },
     ];
 
-    const tmp_data = [];
-    for (let i = 0; i < 7; i++) {
-        tmp_data.push({
-            key: i,
-            name: 'Employee ' + i,
-            monday_rate: 19,
-            monday_hrs: 13,
-            monday_tips: 20,
-            tuesday_rate: 19,
-            tuesday_hrs: 14,
-            tuesday_tips: 20,
-            wednesday_rate: 19,
-            wednesday_hrs: 12,
-            wednesday_tips: 20,
-            thursday_rate: 19,
-            thursday_hrs: 14,
-            thursday_tips: 20,
-            friday_rate: 19,
-            friday_hrs: 15,
-            friday_tips: 20,
-            saturday_rate: 19,
-            saturday_hrs: 13,
-            saturday_tips: 20,
-            sunday_rate: 19,
-            sunday_hrs: 13,
-            sunday_tips: 20
-        });
-        tmp_data.forEach(record => {
-            record.total_tips = Number(record.monday_tips) + Number(record.tuesday_tips) + Number(record.wednesday_tips) + Number(record.thursday_tips) + Number(record.friday_tips) + Number(record.saturday_tips) + Number(record.sunday_tips);
-            record.total_hrs = Number(record.monday_hrs) + Number(record.tuesday_hrs) + Number(record.wednesday_hrs) + Number(record.thursday_hrs) + Number(record.friday_hrs) + Number(record.saturday_hrs) + Number(record.sunday_hrs);
-            record.total_rate = record.monday_rate * record.monday_hrs + record.tuesday_rate * record.tuesday_hrs + record.wednesday_rate * record.wednesday_hrs + record.thursday_rate * record.thursday_hrs + record.friday_rate * record.friday_hrs + record.saturday_rate * record.saturday_hrs + record.sunday_rate * record.sunday_hrs;
-        });
-    }
-
     const mapColumns = (col) => {
         if (!col.editable) {
             return col;
@@ -450,20 +418,61 @@ const SpreadTable = () => {
                     ...item,
                     ...row,
                 });
+
+
+                await axios.put(
+                    `${process.env.REACT_APP_IP_ADDRESS}/spreadsheets/${newData[index].key}`,
+                    {
+                        employee: newData[index].name,
+                        monday_rate: newData[index].monday_rate === '' ? 0 : newData[index].monday_rate,
+                        monday_hrs: newData[index].monday_hrs === '' ? 0 : newData[index].monday_hrs,
+                        monday_tips: newData[index].monday_tips === '' ? 0 : newData[index].monday_tips,
+                        tuesday_rate: newData[index].tuesday_rate === '' ? 0 : newData[index].tuesday_rate,
+                        tuesday_hrs: newData[index].tuesday_hrs === '' ? 0 : newData[index].tuesday_hrs,
+                        tuesday_tips: newData[index].tuesday_tips === '' ? 0 : newData[index].tuesday_tips,
+                        wednesday_rate: newData[index].wednesday_rate === '' ? 0 : newData[index].wednesday_rate,
+                        wednesday_hrs: newData[index].wednesday_hrs === '' ? 0 : newData[index].wednesday_hrs,
+                        wednesday_tips: newData[index].wednesday_tips === '' ? 0 : newData[index].wednesday_tips,
+                        thursday_rate: newData[index].thursday_rate === '' ? 0 : newData[index].thursday_rate,
+                        thursday_hrs: newData[index].thursday_hrs === '' ? 0 : newData[index].thursday_hrs,
+                        thursday_tips: newData[index].thursday_tips === '' ? 0 : newData[index].thursday_tips,
+                        friday_rate: newData[index].friday_rate === '' ? 0 : newData[index].friday_rate,
+                        friday_hrs: newData[index].friday_hrs === '' ? 0 : newData[index].friday_hrs,
+                        friday_tips: newData[index].friday_tips === '' ? 0 : newData[index].friday_tips,
+                        saturday_rate: newData[index].saturday_rate === '' ? 0 : newData[index].saturday_rate,
+                        saturday_hrs: newData[index].saturday_hrs === '' ? 0 : newData[index].saturday_hrs,
+                        saturday_tips: newData[index].saturday_tips === '' ? 0 : newData[index].saturday_tips,
+                        sunday_rate: newData[index].sunday_rate === '' ? 0 : newData[index].sunday_rate,
+                        sunday_hrs: newData[index].sunday_hrs === '' ? 0 : newData[index].sunday_hrs,
+                        sunday_tips: newData[index].sunday_tips === '' ? 0 : newData[index].sunday_tips,
+                        nth_week: nth_week
+                    }
+                );
+
                 newData.forEach(record => {
-                    record.total_tips = Number(record.monday_tips) + Number(record.tuesday_tips) + Number(record.wednesday_tips) + Number(record.thursday_tips) + Number(record.friday_tips) + Number(record.saturday_tips) + Number(record.sunday_tips);
-                    record.total_hrs = Number(record.monday_hrs) + Number(record.tuesday_hrs) + Number(record.wednesday_hrs) + Number(record.thursday_hrs) + Number(record.friday_hrs) + Number(record.saturday_hrs) + Number(record.sunday_hrs);
-                    record.total_rate = record.monday_rate * record.monday_hrs + record.tuesday_rate * record.tuesday_hrs + record.wednesday_rate * record.wednesday_hrs + record.thursday_rate * record.thursday_hrs + record.friday_rate * record.friday_hrs + record.saturday_rate * record.saturday_hrs + record.sunday_rate * record.sunday_hrs;
+                    let tmp_tips = Number(record.monday_tips) + Number(record.tuesday_tips) + Number(record.wednesday_tips) + Number(record.thursday_tips) + Number(record.friday_tips) + Number(record.saturday_tips) + Number(record.sunday_tips);
+                    let tmp_hrs = Number(record.monday_hrs) + Number(record.tuesday_hrs) + Number(record.wednesday_hrs) + Number(record.thursday_hrs) + Number(record.friday_hrs) + Number(record.saturday_hrs) + Number(record.sunday_hrs);
+                    let tmp_rate = Number(record.monday_rate) * Number(record.monday_hrs) + Number(record.tuesday_rate) * Number(record.tuesday_hrs) + Number(record.wednesday_rate) * Number(record.wednesday_hrs) + Number(record.thursday_rate) * Number(record.thursday_hrs) + Number(record.friday_rate) * Number(record.friday_hrs) + Number(record.saturday_rate) * Number(record.saturday_hrs) + Number(record.sunday_rate) * Number(record.sunday_hrs);
+                    record.total_tips = isNaN(tmp_tips) ? '0' : tmp_tips;
+                    record.total_hrs = isNaN(tmp_hrs) ? '0' : tmp_hrs;
+                    record.total_rate = isNaN(tmp_rate) ? '0' : tmp_rate;
                 });
+
+                console.log("-----------", newData[index], newData[index].key)
                 setData(newData);
                 setEditingKey('');
             } else {
                 newData.push(row);
                 newData.forEach(record => {
-                    record.total_tips = Number(record.monday_tips) + Number(record.tuesday_tips) + Number(record.wednesday_tips) + Number(record.thursday_tips) + Number(record.friday_tips) + Number(record.saturday_tips) + Number(record.sunday_tips);
-                    record.total_hrs = Number(record.monday_hrs) + Number(record.tuesday_hrs) + Number(record.wednesday_hrs) + Number(record.thursday_hrs) + Number(record.friday_hrs) + Number(record.saturday_hrs) + Number(record.sunday_hrs);
-                    record.total_rate = record.monday_rate * record.monday_hrs + record.tuesday_rate * record.tuesday_hrs + record.wednesday_rate * record.wednesday_hrs + record.thursday_rate * record.thursday_hrs + record.friday_rate * record.friday_hrs + record.saturday_rate * record.saturday_hrs + record.sunday_rate * record.sunday_hrs;
+                    let tmp_tips = Number(record.monday_tips) + Number(record.tuesday_tips) + Number(record.wednesday_tips) + Number(record.thursday_tips) + Number(record.friday_tips) + Number(record.saturday_tips) + Number(record.sunday_tips);
+                    let tmp_hrs = Number(record.monday_hrs) + Number(record.tuesday_hrs) + Number(record.wednesday_hrs) + Number(record.thursday_hrs) + Number(record.friday_hrs) + Number(record.saturday_hrs) + Number(record.sunday_hrs);
+                    let tmp_rate = Number(record.monday_rate) * Number(record.monday_hrs) + Number(record.tuesday_rate) * Number(record.tuesday_hrs) + Number(record.wednesday_rate) * Number(record.wednesday_hrs) + Number(record.thursday_rate) * Number(record.thursday_hrs) + Number(record.friday_rate) * Number(record.friday_hrs) + Number(record.saturday_rate) * Number(record.saturday_hrs) + Number(record.sunday_rate) * Number(record.sunday_hrs);
+                    record.total_tips = isNaN(tmp_tips) ? '0' : tmp_tips;
+                    record.total_hrs = isNaN(tmp_hrs) ? '0' : tmp_hrs;
+                    record.total_rate = isNaN(tmp_rate) ? '0' : tmp_rate;
                 });
+                console.log("==============", newData[index], index)
+
                 setData(newData);
                 setEditingKey('');
             }
@@ -471,10 +480,12 @@ const SpreadTable = () => {
             console.log('Validate Failed:', errInfo);
         }
     };
+
     const showModal = () => {
         setIsModalOpen(true);
     };
-    const handleOk = () => {
+
+    const handleOk = async () => {
         let newData = {
             key: data.length,
             name: employee,
@@ -498,19 +509,85 @@ const SpreadTable = () => {
             saturday_tips: '',
             sunday_rate: '',
             sunday_hrs: '',
-            sunday_tips: ''
+            sunday_tips: '',
+            total_hrs: 0,
+            total_rate: 0,
+            total_tips: 0
         };
-        setData([...data, newData]);
+
+        const res = await axios.post(
+            `${process.env.REACT_APP_IP_ADDRESS}/spreadsheets`,
+            {
+                employee: employee,
+                nth_week: nth_week
+            }
+        );
+        if (res.status === 200) {
+
+            setData([...data, newData]);
+        }
         setIsModalOpen(false);
     };
+
     const handleCancel = () => {
         setIsModalOpen(false);
     };
-    const handleDelete = (key) => {
+    const handleDelete = async (key) => {
+        await axios.delete(
+            `${process.env.REACT_APP_IP_ADDRESS}/spreadsheets?id=${key}`
+        );
+
         const newData = data.filter((item) => item.key !== key);
         setData(newData);
     };
-    const onChange = (date) => {
+    const onChange = async (date, dateString) => {
+        setNthWeek(dateString);
+        const res = await axios.get(
+            `${process.env.REACT_APP_IP_ADDRESS}/spreadsheets?nth_week=${dateString}`
+        );
+        if (res.status === 200) {
+            if (res.data.length) {
+                let newData = [];
+                res.data.forEach(record => {
+                    newData.push({
+                        key: record.id,
+                        name: record.employee,
+                        monday_rate: record.monday_rate === null ? '' : record.monday_rate,
+                        monday_hrs: record.monday_hrs === null ? '' : record.monday_hrs,
+                        monday_tips: record.monday_tips === null ? '' : record.monday_tips,
+                        tuesday_rate: record.tuesday_rate === null ? '' : record.tuesday_rate,
+                        tuesday_hrs: record.tuesday_hrs === null ? '' : record.tuesday_hrs,
+                        tuesday_tips: record.tuesday_tips === null ? '' : record.tuesday_tips,
+                        wednesday_rate: record.wednesday_rate === null ? '' : record.wednesday_rate,
+                        wednesday_hrs: record.wednesday_hrs === null ? '' : record.wednesday_hrs,
+                        wednesday_tips: record.wednesday_tips === null ? '' : record.wednesday_tips,
+                        thursday_rate: record.thursday_rate === null ? '' : record.thursday_rate,
+                        thursday_hrs: record.thursday_hrs === null ? '' : record.thursday_hrs,
+                        thursday_tips: record.thursday_tips === null ? '' : record.thursday_tips,
+                        friday_rate: record.friday_rate === null ? '' : record.friday_rate,
+                        friday_hrs: record.friday_hrs === null ? '' : record.friday_hrs,
+                        friday_tips: record.friday_tips === null ? '' : record.friday_tips,
+                        saturday_rate: record.saturday_rate === null ? '' : record.saturday_rate,
+                        saturday_hrs: record.saturday_hrs === null ? '' : record.saturday_hrs,
+                        saturday_tips: record.saturday_tips === null ? '' : record.saturday_tips,
+                        sunday_rate: record.sunday_rate === null ? '' : record.sunday_rate,
+                        sunday_hrs: record.sunday_hrs === null ? '' : record.sunday_hrs,
+                        sunday_tips: record.sunday_tips === null ? '' : record.sunday_tips
+                    });
+                });
+                newData.forEach(record => {
+                    let tmp_tips = Number(record.monday_tips) + Number(record.tuesday_tips) + Number(record.wednesday_tips) + Number(record.thursday_tips) + Number(record.friday_tips) + Number(record.saturday_tips) + Number(record.sunday_tips);
+                    let tmp_hrs = Number(record.monday_hrs) + Number(record.tuesday_hrs) + Number(record.wednesday_hrs) + Number(record.thursday_hrs) + Number(record.friday_hrs) + Number(record.saturday_hrs) + Number(record.sunday_hrs);
+                    let tmp_rate = Number(record.monday_rate) * Number(record.monday_hrs) + Number(record.tuesday_rate) * Number(record.tuesday_hrs) + Number(record.wednesday_rate) * Number(record.wednesday_hrs) + Number(record.thursday_rate) * Number(record.thursday_hrs) + Number(record.friday_rate) * Number(record.friday_hrs) + Number(record.saturday_rate) * Number(record.saturday_hrs) + Number(record.sunday_rate) * Number(record.sunday_hrs);
+                    record.total_tips = isNaN(tmp_tips) ? '0' : tmp_tips;
+                    record.total_hrs = isNaN(tmp_hrs) ? '0' : tmp_hrs;
+                    record.total_rate = isNaN(tmp_rate) ? '0' : tmp_rate;
+                });
+                setData(newData);
+            } else {
+                setData([]);
+            }
+        }
         const startOfWeek = date.startOf('week').format('YYYY-MM-DD');
         setMonday(startOfWeek);
         let dd = new Date(startOfWeek);
@@ -532,13 +609,7 @@ const SpreadTable = () => {
         dd.setDate(dd.getDate() + 1);
         nextDate = dd.toISOString().slice(0, 10);
         setSunday(nextDate);
-        setData([])
-        console.log(monday, tuesday, wednesday, thursday, friday, saturday, sunday);
     };
-
-    useEffect(() => {
-        setData(tmp_data);
-    }, []);
 
     return (
         <Row style={{ display: "inline-block" }}>
